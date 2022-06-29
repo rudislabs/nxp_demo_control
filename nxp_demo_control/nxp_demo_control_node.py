@@ -6,6 +6,10 @@ from rclpy.node import Node
 from tflite_msgs.msg import TFLite, TFInference
 from std_msgs.msg import String
 from rclpy.qos import QoSProfile
+from rclpy.exceptions import ParameterNotDeclaredException
+from rcl_interfaces.msg import Parameter
+from rcl_interfaces.msg import ParameterType
+from rcl_interfaces.msg import ParameterDescriptor
 from geometry_msgs.msg import Twist
 
 class NXPDemoControl(Node):
@@ -38,8 +42,6 @@ class NXPDemoControl(Node):
             type=ParameterType.PARAMETER_DOUBLE,
             description='Threshold_1 value for inference score.')
 
-
-
         self.declare_parameter("cmd_input_topic", "/requested_vel", 
             command_input_topic_descriptor)
 
@@ -47,10 +49,10 @@ class NXPDemoControl(Node):
             command_output_topic_descriptor)
 
         self.declare_parameter("tflite_topic_0", "/TFLiteSim", 
-            tf_lite_0_topic_descriptor)
+            tf_lite_topic_0_descriptor)
 
         self.declare_parameter("tflite_topic_1", "/TFLiteReal", 
-            tf_lite_1_topic_descriptor)
+            tf_lite_topic_1_descriptor)
 
         self.declare_parameter("threshold_0", 0.5, 
             threshold_0_descriptor)
@@ -106,9 +108,12 @@ class NXPDemoControl(Node):
         self.StopMotors1 = False
         return
 
-if __name__ == '__main__':
+def main(args=None):
     rclpy.init()
     NXPDC = NXPDemoControl()
     rclpy.spin(NXPDC)
     NXPDC.destroy_node()
     rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
